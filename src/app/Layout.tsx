@@ -1,8 +1,6 @@
 import { h } from '@jsx/html';
-import { Meta } from '@shared/ui/Meta/Meta';
-import { Header } from '@shared/ui/Header/Header';
 import { Footer } from '@shared/ui/Footer/Footer';
-// Layout.css will be included in the bundled CSS
+import { Meta } from '@shared/ui/Meta/Meta';
 
 interface LayoutProps {
   title: string;
@@ -21,11 +19,13 @@ export function Layout({ title, description, children, cssContent, basePath = '/
     <html lang="en">
       <head>
         <base href={basePath} />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&display=swap" rel="stylesheet" />
         {Meta({ title, description })}
         <style>{cssContent}</style>
       </head>
       <body>
-        {Header()}
         {children}
         {Footer()}
         <script src={scriptPath}></script>
@@ -33,4 +33,3 @@ export function Layout({ title, description, children, cssContent, basePath = '/
     </html>
   );
 }
-

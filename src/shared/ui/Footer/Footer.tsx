@@ -4,8 +4,8 @@ import { h } from '@jsx/html';
 export function Footer(): string {
   return (
     <footer>
+      <a href="/about/">About</a>
       <p>&copy; 2024 STM32 Rust Lessons</p>
     </footer>
   );
 }
-

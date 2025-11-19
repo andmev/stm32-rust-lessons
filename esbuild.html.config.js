@@ -132,6 +132,9 @@ async function build() {
           path.relative(pagesDir, tsxPath).replace(/\.tsx$/, '.js')
         );
 
+        // Ensure temp directory exists for this file
+        fs.mkdirSync(path.dirname(tempJsPath), { recursive: true });
+
         await esbuild.build({
           entryPoints: [tsxPath],
           bundle: true,
@@ -198,7 +201,9 @@ async function build() {
     console.log(`✓ Successfully built ${successCount} page(s)`);
   } else {
     console.error(`⚠ Built ${successCount}/${tsxFiles.length} page(s)`);
-    process.exit(1);
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(`Build failed for ${tsxFiles.length - successCount} page(s)`);
+    }
   }
 
   // Create .nojekyll file for GitHub Pages

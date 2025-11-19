@@ -1,21 +1,86 @@
-import { h } from '@jsx/html';
 import { Layout } from '@app/Layout';
+import { h } from '@jsx/html';
+import { LessonCard } from '@shared/ui/LessonCard/LessonCard';
 
 interface PageProps {
   cssContent: string;
   basePath?: string;
 }
 
+const lessons = [
+  {
+    id: 1,
+    title: 'Environment Setup & First Blinky',
+    description: 'Set up the Rust toolchain, install necessary dependencies, and flash your first GPIO-controlled LED application.',
+    link: '/lessons/lesson-1'
+  },
+  {
+    id: 2,
+    title: 'Using the Hardware Abstraction Layer',
+    description: 'Explore the STM32 HAL crates for safe, high-level control over peripherals instead of raw register manipulation.',
+    link: '/lessons/lesson-2'
+  },
+  {
+    id: 3,
+    title: 'External Interrupts and Debouncing',
+    description: 'Implement External Interrupts to handle asynchronous input and apply proper debouncing techniques for reliable.',
+    link: '/lessons/lesson-3'
+  },
+  {
+    id: 4,
+    title: 'Timers and PWM Control',
+    description: 'Configure and use on-chip Timers to generate accurate delays and implement Pulse Width Modulation (PWM) for.',
+    link: '/lessons/lesson-4'
+  },
+  {
+    id: 5,
+    title: 'Real-Time Concurrency (RTIC)',
+    description: 'Configure and use on-chip Timers to generate accurate delays and implement Pulse Width Modulation (PWM) for.',
+    link: '/lessons/lesson-5'
+  },
+  {
+    id: 6,
+    title: 'Serial Communication (UART/USART)',
+    description: 'Configure and use on-chip Timers to generate accurate delays and implement Pulse Width Modulation (PWM) for.',
+    link: '/lessons/lesson-6'
+  },
+  {
+    id: 7,
+    title: 'Asynchronous Networking (EMBASSY)',
+    description: 'Utilize the EMBASSY framework to introduce non-blocking, asynchronous I/O and networking capabilities to your.',
+    link: '/lessons/lesson-7'
+  },
+  {
+    id: 8,
+    title: 'Sensor Protocols (I2C/SPI)',
+    description: 'Master bus protocols I2C and SPI to successfully interface with external sensors, displays, and other peripheral.',
+    link: '/lessons/lesson-8'
+  }
+];
+
 export function Page({ cssContent, basePath }: PageProps): string {
   const content = (
     <main>
-      <h1>Welcome to STM32 Rust Lessons</h1>
-      <p>Master embedded Rust programming on STM32 microcontrollers with our comprehensive tutorials and examples.</p>
+      <div class="text-center mb-12">
+        <h3 class="hero-subtitle">Embedded Rust on STM32</h3>
+        <h1>Powerfully Safe</h1>
+        <p class="hero-description">
+          Learn safe, bare-metal programming for STM32 microcontrollers using Rust.
+          Focus on leveraging the efficiency of the ARM Cortex-M architecture for
+          robust, high-performance firmware.
+        </p>
+      </div>
       
-      <h2>Available Lessons</h2>
-      <ul>
-        <li><a href="/lessons/hello-world/">Hello World (Blinky)</a></li>
-      </ul>
+      <div class="lesson-grid">
+        {lessons.map(lesson => (
+          LessonCard({
+            lessonNumber: lesson.id,
+            title: lesson.title,
+            description: lesson.description,
+            link: lesson.link
+          })
+        ))}
+      </div>
     </main>
   );
 
@@ -27,4 +92,3 @@ export function Page({ cssContent, basePath }: PageProps): string {
     basePath,
   });
 }
-

@@ -9,12 +9,14 @@ interface LayoutProps {
   description: string;
   children: string;
   cssContent: string;
+  basePath?: string;
 }
 
-export function Layout({ title, description, children, cssContent }: LayoutProps): string {
+export function Layout({ title, description, children, cssContent, basePath = '/' }: LayoutProps): string {
   return (
     <html lang="en">
       <head>
+        <base href={basePath} />
         {Meta({ title, description })}
         <style>{cssContent}</style>
       </head>

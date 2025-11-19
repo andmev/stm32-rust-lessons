@@ -9,6 +9,39 @@ const pagesDir = path.join(srcDir, 'pages');
 const tempDir = path.join(__dirname, '.temp');
 
 /**
+ * Get the base path for GitHub Pages from package.json
+ * Only sets base path when building for GitHub Pages (GITHUB_PAGES env var is set)
+ */
+function getBasePath() {
+  // Only set base path when building for GitHub Pages
+  // Check for GITHUB_PAGES environment variable or if we're in GitHub Actions
+  const isGitHubPages = process.env.GITHUB_PAGES === 'true' || 
+                        process.env.CI === 'true' || 
+                        process.env.GITHUB_ACTIONS === 'true';
+  
+  if (!isGitHubPages) {
+    // Local development - use root path
+    return '/';
+  }
+  
+  // Building for GitHub Pages - extract repo name
+  try {
+    const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'));
+    if (packageJson.repository && packageJson.repository.url) {
+      // Extract repo name from URL like "https://github.com/andmev/stm32-rust-lessons.git"
+      const match = packageJson.repository.url.match(/github\.com\/[^\/]+\/([^\/\.]+)/);
+      if (match && match[1]) {
+        return '/' + match[1] + '/';
+      }
+    }
+  } catch (error) {
+    console.warn('Could not extract base path from package.json:', error.message);
+  }
+  // Default to root if extraction fails
+  return '/';
+}
+
+/**
  * Find all CSS files recursively
  */
 function findCssFiles(dir, fileList = []) {
@@ -126,8 +159,11 @@ async function build() {
           throw new Error(`Page component not found in ${tsxPath}`);
         }
 
+        // Get base path for GitHub Pages
+        const basePath = getBasePath();
+        
         // Generate and minify HTML
-        const htmlString = Page({ cssContent });
+        const htmlString = Page({ cssContent, basePath });
         const minified = await minify(htmlString, {
           collapseWhitespace: true,
           removeComments: true,

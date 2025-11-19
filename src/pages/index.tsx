@@ -3,9 +3,10 @@ import { Layout } from '@app/Layout';
 
 interface PageProps {
   cssContent: string;
+  basePath?: string;
 }
 
-export function Page({ cssContent }: PageProps): string {
+export function Page({ cssContent, basePath }: PageProps): string {
   const content = (
     <main>
       <h1>Welcome to STM32 Rust Lessons</h1>
@@ -23,6 +24,7 @@ export function Page({ cssContent }: PageProps): string {
     description: 'Learn embedded Rust on STM32 microcontrollers.',
     children: content.toString(),
     cssContent,
+    basePath,
   });
 }
 

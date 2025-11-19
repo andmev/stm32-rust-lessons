@@ -3,9 +3,10 @@ import { Layout } from '@app/Layout';
 
 interface PageProps {
   cssContent: string;
+  basePath?: string;
 }
 
-export function Page({ cssContent }: PageProps): string {
+export function Page({ cssContent, basePath }: PageProps): string {
   const content = (
     <main>
       <h1>Hello World (Blinky)</h1>
@@ -39,6 +40,7 @@ fn main() -> ! {
     description: 'Your first embedded Rust program: Blinking an LED on STM32.',
     children: content.toString(),
     cssContent,
+    basePath,
   });
 }
 

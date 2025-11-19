@@ -6,11 +6,12 @@ interface LayoutProps {
   title: string;
   description: string;
   children: string;
+  floatingImages?: string;
   cssContent: string;
   basePath?: string;
 }
 
-export function Layout({ title, description, children, cssContent, basePath = '/' }: LayoutProps): string {
+export function Layout({ title, description, children, floatingImages, cssContent, basePath = '/' }: LayoutProps): string {
   // Normalize basePath - ensure it ends with / and remove leading / if basePath is not root
   const normalizedBase = basePath === '/' ? '' : basePath.replace(/\/$/, '');
   const scriptPath = `${normalizedBase}/js/index.js`;
@@ -26,6 +27,7 @@ export function Layout({ title, description, children, cssContent, basePath = '/
         <style>{cssContent}</style>
       </head>
       <body>
+        {floatingImages || ''}
         {children}
         {Footer()}
         <script src={scriptPath}></script>

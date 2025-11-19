@@ -1,0 +1,84 @@
+.floating-image {
+  position: fixed;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+  transition: opacity 0.6s ease-in-out, transform 0.3s ease-out;
+}
+
+.floating-image__img {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0;
+  animation: fadeInImage 0.8s ease-in-out 0.2s forwards;
+  filter: blur(0);
+  transition: filter 0.3s ease-in-out;
+}
+
+/* Blur-up effect: start with blurred background, fade in sharp image */
+.floating-image__img[loading="lazy"] {
+  background-color: transparent;
+  background-repeat: no-repeat;
+}
+
+/* Fade in animation */
+@keyframes fadeInImage {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive behavior - scale down on smaller screens */
+@media (max-width: 1200px) {
+  .floating-image {
+    max-width: 250px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .floating-image {
+    max-width: 150px !important;
+    opacity: 0.7;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-image {
+    max-width: 100px !important;
+    opacity: 0.5;
+  }
+}
+
+/* Hide images on very small screens to prevent overflow */
+@media (max-width: 360px) {
+  .floating-image {
+    display: none;
+  }
+}
+
+/* Ensure images don't interfere with content interaction */
+.floating-image * {
+  pointer-events: none;
+}
+
+/* Optional: Add subtle parallax effect on scroll (can be enhanced with JS) */
+@media (prefers-reduced-motion: no-preference) {
+  .floating-image {
+    transition: transform 0.1s ease-out;
+  }
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .floating-image,
+  .floating-image__img {
+    animation: none;
+    transition: none;
+  }
+}

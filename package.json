@@ -1,0 +1,47 @@
+{
+  "name": "stm32-rust-lessons",
+  "version": "1.0.0",
+  "description": "Open-source educational website with STM32 on Rust lessons, examples, code snippets, videos, and projects from blink to wireless OTA updates.",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build:js": "NODE_ENV=production node esbuild.config.js",
+    "build:html": "NODE_ENV=production node esbuild.html.config.js",
+    "build:assets": "copyfiles -u 1 \"src/assets/**/*\" dist",
+    "build": "npm-run-all clean build:js build:html build:assets",
+    "dev": "http-server src -c-1",
+    "start": "http-server dist -c-1"
+  },
+  "keywords": [
+    "stm32",
+    "rust",
+    "embedded",
+    "embedded-rust",
+    "lessons",
+    "tutorials",
+    "rtic",
+    "embassy",
+    "microcontroller",
+    "firmware"
+  ],
+  "author": "Andrii Medvediev <a.medvedev@me.com>",
+  "homepage": "https://github.com/andmev/stm32-rust-lessons#readme",
+  "bugs": {
+    "url": "https://github.com/andmev/stm32-rust-lessons/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andmev/stm32-rust-lessons.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "copyfiles": "^2.4.1",
+    "esbuild": "^0.27.0",
+    "html-minifier-terser": "^7.2.0",
+    "http-server": "^14.1.1",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^6.1.2",
+    "typescript": "^5.9.3"
+  }
+}

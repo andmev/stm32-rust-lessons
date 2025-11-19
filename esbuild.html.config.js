@@ -164,6 +164,21 @@ async function build() {
     console.error(`⚠ Built ${successCount}/${tsxFiles.length} page(s)`);
     process.exit(1);
   }
+
+  // Create .nojekyll file for GitHub Pages
+  const nojekyllPath = path.join(distDir, '.nojekyll');
+  fs.writeFileSync(nojekyllPath, '');
+  console.log('✓ Created .nojekyll file');
+
+  // Create 404.html for GitHub Pages client-side routing
+  // This will be served when a route doesn't match a file, allowing client-side routing to handle it
+  const indexPath = path.join(distDir, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    const indexContent = fs.readFileSync(indexPath, 'utf8');
+    const fourOhFourPath = path.join(distDir, '404.html');
+    fs.writeFileSync(fourOhFourPath, indexContent);
+    console.log('✓ Created 404.html for GitHub Pages routing');
+  }
 }
 
 if (require.main === module) {

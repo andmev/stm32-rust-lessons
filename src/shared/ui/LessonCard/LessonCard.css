@@ -19,19 +19,17 @@
 }
 
 .lesson-card__number {
-  font-family: 'PT Sans Narrow', sans-serif;
+  font-family: var(--font-sans-narrow);
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: 0.05em;
-  text-transform: uppercase;
   color: var(--text-muted);
-  margin-bottom: 0.75rem;
 }
 
 .lesson-card__title {
-  font-family: 'PT Sans Narrow', sans-serif;
+  font-family: var(--font-sans-narrow);
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 1rem;
   line-height: 1.1;
   letter-spacing: -0.01em;
@@ -39,7 +37,7 @@
 }
 
 .lesson-card__description {
-  font-family: 'PT Sans', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.125rem;
   line-height: 1.6;
   color: var(--text-secondary);

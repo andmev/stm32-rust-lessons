@@ -64,11 +64,7 @@ export function Page({ cssContent, basePath }: PageProps): string {
       <div class="text-center mb-12">
         <h3 class="hero-subtitle">Embedded Rust on STM32</h3>
         <h1>Powerfully Safe</h1>
-        <p class="hero-description">
-          Learn safe, bare-metal programming for STM32 microcontrollers using Rust.
-          Focus on leveraging the efficiency of the ARM Cortex-M architecture for
-          robust, high-performance firmware.
-        </p>
+        <p class="hero-description">Learn safe, bare-metal programming for STM32 microcontrollers using Rust. Focus on leveraging the efficiency of the ARM Cortex-M architecture for robust, high-performance firmware.</p>
       </div>
       
       <div class="lesson-grid">

@@ -67,9 +67,7 @@ p {
 }
 
 /* View Transition API Styles */
-@view-transition {
-    navigation: auto;
-}
+/* Note: navigation: auto is not used since we're doing manual SPA transitions */
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
@@ -103,7 +101,7 @@ p {
     }
 }
 
-/* View transition for main content */
+/* View transition for main content - ensures smooth transitions */
 main {
     view-transition-name: main-content;
 }

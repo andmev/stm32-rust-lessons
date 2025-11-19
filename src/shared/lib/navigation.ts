@@ -147,9 +147,48 @@ declare global {
     }
 
     /**
+     * Update the DOM with new content (synchronous for View Transition API)
+     */
+    function updateDOM(doc: Document, href: string, isPopState: boolean): void {
+        // Update the document title
+        document.title = doc.title;
+
+        // Update the main content areas by updating innerHTML to preserve element identity
+        // This allows View Transition API to recognize the same elements
+        const oldMain = document.querySelector('main');
+        const newMain = doc.querySelector('main');
+        if (oldMain && newMain) {
+            oldMain.innerHTML = newMain.innerHTML;
+        }
+
+        const oldHeader = document.querySelector('header');
+        const newHeader = doc.querySelector('header');
+        if (oldHeader && newHeader) {
+            oldHeader.innerHTML = newHeader.innerHTML;
+        }
+
+        const oldFooter = document.querySelector('footer');
+        const newFooter = doc.querySelector('footer');
+        if (oldFooter && newFooter) {
+            oldFooter.innerHTML = newFooter.innerHTML;
+        }
+
+        // Update the URL without reloading
+        // Use replaceState for popstate, pushState for regular navigation
+        if (isPopState) {
+            window.history.replaceState({}, '', href);
+        } else {
+            window.history.pushState({}, '', href);
+        }
+
+        // Dispatch a custom event for any additional initialization
+        window.dispatchEvent(new Event('page-transition'));
+    }
+
+    /**
      * Navigate to a new page and update the DOM
      */
-    async function navigateToPage(href: string, isPopState: boolean = false): Promise<void> {
+    async function navigateToPage(href: string, isPopState: boolean = false, useTransition: boolean = false): Promise<void> {
         if (isNavigating) return;
         isNavigating = true;
 
@@ -167,38 +206,22 @@ declare global {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
 
-            // Update the document title
-            document.title = doc.title;
-
-            // Update the main content areas
-            const oldMain = document.querySelector('main');
-            const newMain = doc.querySelector('main');
-            if (oldMain && newMain) {
-                oldMain.replaceWith(newMain);
-            }
-
-            const oldHeader = document.querySelector('header');
-            const newHeader = doc.querySelector('header');
-            if (oldHeader && newHeader) {
-                oldHeader.replaceWith(newHeader);
-            }
-
-            const oldFooter = document.querySelector('footer');
-            const newFooter = doc.querySelector('footer');
-            if (oldFooter && newFooter) {
-                oldFooter.replaceWith(newFooter);
-            }
-
-            // Update the URL without reloading
-            // Use replaceState for popstate, pushState for regular navigation
-            if (isPopState) {
-                window.history.replaceState({}, '', href);
+            // If using transition, wrap DOM update in startViewTransition
+            if (useTransition && document.startViewTransition) {
+                const transition = document.startViewTransition(() => {
+                    updateDOM(doc, href, isPopState);
+                });
+                // Wait for transition to complete
+                try {
+                    await transition.finished;
+                } catch (err) {
+                    // Transition might be skipped, that's okay
+                    console.debug('View transition:', err);
+                }
             } else {
-                window.history.pushState({}, '', href);
+                // Update DOM directly
+                updateDOM(doc, href, isPopState);
             }
-
-            // Dispatch a custom event for any additional initialization
-            window.dispatchEvent(new Event('page-transition'));
         } catch (error) {
             console.error('Navigation failed:', error);
             // Fallback to normal navigation
@@ -230,20 +253,8 @@ declare global {
             
             e.preventDefault();
             
-            // Start view transition
-            if (document.startViewTransition) {
-                const transition = document.startViewTransition(() => {
-                    navigateToPage(href, false);
-                });
-
-                try {
-                    await transition.finished;
-                } catch (err) {
-                    console.error('View transition failed:', err);
-                }
-            } else {
-                navigateToPage(href, false);
-            }
+            // Navigate with transition support
+            await navigateToPage(href, false, true);
         });
 
         // Handle browser back/forward buttons
@@ -252,19 +263,8 @@ declare global {
                 return;
             }
 
-            if (document.startViewTransition) {
-                const transition = document.startViewTransition(() => {
-                    navigateToPage(window.location.pathname, true);
-                });
-
-                try {
-                    await transition.finished;
-                } catch (err) {
-                    console.error('View transition failed:', err);
-                }
-            } else {
-                navigateToPage(window.location.pathname, true);
-            }
+            // Navigate with transition support
+            await navigateToPage(window.location.pathname, true, true);
         });
     }
 

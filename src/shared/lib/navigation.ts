@@ -20,6 +20,98 @@ declare global {
     let isNavigating = false;
 
     /**
+     * Get the base path for the application
+     * On GitHub Pages, this would be something like '/stm32-rust-lessons/'
+     * On localhost, this would be '/'
+     */
+    function getBasePath(): string {
+        // Check for a base tag first
+        const baseTag = document.querySelector('base');
+        if (baseTag && baseTag.href) {
+            try {
+                const baseUrl = new URL(baseTag.href);
+                return baseUrl.pathname.endsWith('/') ? baseUrl.pathname : baseUrl.pathname + '/';
+            } catch {
+                // fall through
+            }
+        }
+        
+        // Detect base path from the script tag that loads our JS
+        // The script is at /js/index.js or /stm32-rust-lessons/js/index.js
+        const scriptTag = document.querySelector('script[src*="/js/index.js"]');
+        if (scriptTag) {
+            const src = (scriptTag as HTMLScriptElement).src;
+            try {
+                const scriptUrl = new URL(src);
+                const scriptPath = scriptUrl.pathname;
+                // Extract base path: /js/index.js -> /, /stm32-rust-lessons/js/index.js -> /stm32-rust-lessons/
+                const jsIndex = scriptPath.indexOf('/js/index.js');
+                if (jsIndex > 0) {
+                    return scriptPath.substring(0, jsIndex) + '/';
+                } else if (jsIndex === 0) {
+                    return '/';
+                }
+            } catch {
+                // fall through
+            }
+        }
+        
+        // Fallback: detect from current pathname
+        // If we're on GitHub Pages (github.io domain), extract repo name
+        if (window.location.hostname.includes('github.io')) {
+            const pathname = window.location.pathname;
+            const parts = pathname.split('/').filter(p => p);
+            // GitHub Pages URLs are: /repo-name/page-path
+            // The first part is usually the repo name
+            if (parts.length > 0) {
+                // Check if first part looks like a repo name (not a known page route)
+                const knownRoutes = ['', 'about', 'lessons'];
+                const firstPart = parts[0];
+                if (!knownRoutes.includes(firstPart)) {
+                    // First part is likely the repo name
+                    return '/' + firstPart + '/';
+                }
+            }
+        }
+        
+        // Default to root
+        return '/';
+    }
+
+    /**
+     * Normalize a href to include the base path if needed
+     * This ensures fetch() works correctly on GitHub Pages
+     */
+    function normalizeHref(href: string): string {
+        // If href is already a full URL, return as-is
+        if (href.startsWith('http://') || href.startsWith('https://')) {
+            return href;
+        }
+        
+        const basePath = getBasePath();
+        const cleanBase = basePath === '/' ? '' : basePath.replace(/\/$/, '');
+        
+        // If href starts with '/', it's an absolute path
+        if (href.startsWith('/')) {
+            // Check if href already includes the base path
+            if (cleanBase && href.startsWith(cleanBase + '/')) {
+                // Already includes base path, return as-is
+                return href;
+            }
+            // Prepend the base path if we're on GitHub Pages
+            return cleanBase + href;
+        }
+        
+        // Relative path - resolve it relative to current location
+        const currentPath = window.location.pathname;
+        const currentDir = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+        
+        // Resolve relative path
+        const resolved = new URL(href, window.location.origin + currentDir);
+        return resolved.pathname + resolved.search + resolved.hash;
+    }
+
+    /**
      * Check if View Transition API is supported
      */
     function isViewTransitionSupported(): boolean {
@@ -62,8 +154,11 @@ declare global {
         isNavigating = true;
 
         try {
+            // Normalize href for fetching (includes base path for GitHub Pages)
+            const fetchHref = normalizeHref(href);
+            
             // Fetch the new page
-            const response = await fetch(href);
+            const response = await fetch(fetchHref);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }

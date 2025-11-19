@@ -181,6 +181,9 @@ declare global {
             window.history.pushState({}, '', href);
         }
 
+        // Scroll to top of the page
+        window.scrollTo(0, 0);
+
         // Dispatch a custom event for any additional initialization
         window.dispatchEvent(new Event('page-transition'));
     }
@@ -283,5 +286,4 @@ declare global {
 })();
 
 // Export empty object to make this file a module (required for declare global)
-export {};
-
+export { };

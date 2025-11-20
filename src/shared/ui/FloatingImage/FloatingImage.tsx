@@ -12,6 +12,7 @@ interface FloatingImageProps {
   stickyTop: string;
   maxWidth: string;
   className?: string;
+  basePath?: string;
 }
 
 export function FloatingImage({ 
@@ -20,9 +21,12 @@ export function FloatingImage({
   position, 
   stickyTop, 
   maxWidth,
-  className = ''
+  className = '',
+  basePath = '/'
 }: FloatingImageProps): string {
-  const basePath = '/assets';
+  // Normalize basePath - ensure it doesn't end with / for asset paths
+  const normalizedBase = basePath === '/' ? '' : basePath.replace(/\/$/, '');
+  const assetsPath = `${normalizedBase}/assets`;
   
   // Generate style attribute from position object
   const positionStyles = Object.entries(position)
@@ -38,49 +42,49 @@ export function FloatingImage({
         {/* WebP sources for modern browsers - Large */}
         <source
           media="(min-width: 1024px)"
-          srcset={`${basePath}/large/${src}.webp`}
+          srcset={`${assetsPath}/large/${src}.webp`}
           type="image/webp"
         />
         {/* WebP sources - Medium */}
         <source
           media="(min-width: 768px)"
-          srcset={`${basePath}/medium/${src}.webp`}
+          srcset={`${assetsPath}/medium/${src}.webp`}
           type="image/webp"
         />
         {/* WebP sources - Small */}
         <source
           media="(min-width: 480px)"
-          srcset={`${basePath}/small/${src}.webp`}
+          srcset={`${assetsPath}/small/${src}.webp`}
           type="image/webp"
         />
         
         {/* PNG fallback sources - Large */}
         <source
           media="(min-width: 1024px)"
-          srcset={`${basePath}/large/${src}.png`}
+          srcset={`${assetsPath}/large/${src}.png`}
           type="image/png"
         />
         {/* PNG fallback - Medium */}
         <source
           media="(min-width: 768px)"
-          srcset={`${basePath}/medium/${src}.png`}
+          srcset={`${assetsPath}/medium/${src}.png`}
           type="image/png"
         />
         {/* PNG fallback - Small */}
         <source
           media="(min-width: 480px)"
-          srcset={`${basePath}/small/${src}.png`}
+          srcset={`${assetsPath}/small/${src}.png`}
           type="image/png"
         />
         
         {/* Default fallback image with blur placeholder */}
         <img
-          src={`${basePath}/small/${src}.png`}
+          src={`${assetsPath}/small/${src}.png`}
           alt={alt}
           loading="lazy"
           decoding="async"
           onload="this.style.backgroundImage='none'"
-          style={`background-image: url('${basePath}/tiny/${src}.jpg'); background-size: cover; background-position: center;`}
+          style={`background-image: url('${assetsPath}/tiny/${src}.jpg'); background-size: cover; background-position: center;`}
           class="floating-image__img"
         />
       </picture>

@@ -68,7 +68,8 @@ export function Page({ cssContent, basePath }: PageProps): string {
         alt: 'Decorative diode illustration',
         position: { top: '15vh', right: '8%' },
         stickyTop: '100px',
-        maxWidth: '220px'
+        maxWidth: '220px',
+        basePath
       })}
       
       {FloatingImage({
@@ -76,7 +77,8 @@ export function Page({ cssContent, basePath }: PageProps): string {
         alt: 'Decorative CPU illustration',
         position: { top: '35vh', left: '5%' },
         stickyTop: '250px',
-        maxWidth: '260px'
+        maxWidth: '260px',
+        basePath
       })}
       
       {FloatingImage({
@@ -84,7 +86,8 @@ export function Page({ cssContent, basePath }: PageProps): string {
         alt: 'Decorative battery illustration',
         position: { top: '55vh', right: '10%' },
         stickyTop: '200px',
-        maxWidth: '280px'
+        maxWidth: '280px',
+        basePath
       })}
       
       {FloatingImage({
@@ -92,7 +95,8 @@ export function Page({ cssContent, basePath }: PageProps): string {
         alt: 'Decorative circuit illustration',
         position: { top: '75vh', left: '7%' },
         stickyTop: '150px',
-        maxWidth: '240px'
+        maxWidth: '240px',
+        basePath
       })}
       
       {FloatingImage({
@@ -100,7 +104,8 @@ export function Page({ cssContent, basePath }: PageProps): string {
         alt: 'Decorative Rust crab illustration',
         position: { bottom: '0', right: '6%' },
         stickyTop: '500px',
-        maxWidth: '250px'
+        maxWidth: '250px',
+        basePath
       })}
     </div>
   );

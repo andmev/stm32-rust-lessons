@@ -98,8 +98,8 @@ export function Page({ cssContent, basePath }: PageProps): string {
       {FloatingImage({
         src: 'Crab',
         alt: 'Decorative Rust crab illustration',
-        position: { bottom: '10vh', right: '6%' },
-        stickyTop: '300px',
+        position: { bottom: '0', right: '6%' },
+        stickyTop: '500px',
         maxWidth: '250px'
       })}
     </div>
